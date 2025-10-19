@@ -79,51 +79,38 @@ class _ImagePickScreenState extends State<ImagePickScreen> {
   }
 
   Future<void> _cropImage() async {
-    File? croppedFile = await ImageCropper.cropImage(
+    CroppedFile? croppedFile = await ImageCropper().cropImage(
       sourcePath: imageFile!.path,
       compressFormat: ImageCompressFormat.png,
       compressQuality: 70,
-      aspectRatioPresets: Platform.isAndroid
-          ? [
-              CropAspectRatioPreset.square,
-              CropAspectRatioPreset.ratio3x2,
-              CropAspectRatioPreset.original,
-              CropAspectRatioPreset.ratio4x3,
-              CropAspectRatioPreset.ratio16x9
-            ]
-          : [
-              CropAspectRatioPreset.square,
-              CropAspectRatioPreset.ratio3x2,
-              CropAspectRatioPreset.original,
-              CropAspectRatioPreset.ratio4x3,
-              CropAspectRatioPreset.ratio16x9
-            ],
-      androidUiSettings: AndroidUiSettings(
-        toolbarTitle: 'Edit',
-        cropFrameStrokeWidth: 13,
-        dimmedLayerColor: Colors.blue.withOpacity(0.7),
-        statusBarColor: Colors.blue,
-        backgroundColor: Colors.blue,
-        hideBottomControls: true,
-        cropFrameColor: Colors.blue,
-        cropGridColor: Colors.blue.withOpacity(0.4),
-        toolbarColor: Colors.blue,
-        toolbarWidgetColor: Colors.white,
-        initAspectRatio: CropAspectRatioPreset.original,
-        lockAspectRatio: false,
-        activeControlsWidgetColor: Colors.green,
-      ),
-      iosUiSettings: const IOSUiSettings(
-        title: 'Edit',
-        cancelButtonTitle: 'Cancel',
-        hidesNavigationBar: true,
-        doneButtonTitle: 'Done',
-        rotateButtonsHidden: true,
-        rotateClockwiseButtonHidden: true,
-      ),
+      uiSettings: [
+        AndroidUiSettings(
+          toolbarTitle: 'Edit',
+          cropFrameStrokeWidth: 13,
+          dimmedLayerColor: Colors.blue.withOpacity(0.7),
+          statusBarLight: true,
+          backgroundColor: Colors.blue,
+          hideBottomControls: true,
+          cropFrameColor: Colors.blue,
+          cropGridColor: Colors.blue.withOpacity(0.4),
+          toolbarColor: Colors.blue,
+          toolbarWidgetColor: Colors.white,
+          initAspectRatio: CropAspectRatioPreset.original,
+          lockAspectRatio: false,
+          activeControlsWidgetColor: Colors.green,
+        ),
+        IOSUiSettings(
+          title: 'Edit',
+          cancelButtonTitle: 'Cancel',
+          hidesNavigationBar: true,
+          doneButtonTitle: 'Done',
+          rotateButtonsHidden: true,
+          rotateClockwiseButtonHidden: true,
+        )
+      ],
     );
     if (croppedFile != null) {
-      imageFile = croppedFile;
+      imageFile = File(croppedFile.path);
       setState(() {
         state = AppState.cropped;
       });
